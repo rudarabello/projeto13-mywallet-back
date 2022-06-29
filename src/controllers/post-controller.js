@@ -36,5 +36,16 @@ async function postLogin(req, res, db) {
     }
 };
 
+async function postTransaction(req, res, db) {
+    
+    try {
+     
+    } catch (error) {
+        res.sendStatus(500);
+    }
+};
 
-export { postSignUp, postLogin };
+
+
+
+export { postSignUp, postLogin, postTransaction };
