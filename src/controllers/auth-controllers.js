@@ -22,7 +22,7 @@ async function login(req, res) {
     }
 };
 
-async function signup(req, res) {
+async function singup(req, res) {
     const { name, email, password } = req.body;
     const passwordHash = bcrypt.hashSync(password, 10);
     try {
@@ -53,4 +53,4 @@ async function logout(req, res) {
     }
 }
 
-export { login, signup, logout };
+export { login, singup, logout };

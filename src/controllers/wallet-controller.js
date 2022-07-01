@@ -1,51 +1,37 @@
+import { db } from "../databases/mongo";
+import dayjs from "dayjs";
+import { ObjectId } from "mongodb";
 
-async function postSignUp(req, res, db) {
-    const user = req.body.user;
-    const email = req.body.email;
-    const cpf = req.body.cpf;
-    const password = req.body.password;
+async function postWallet(req, res) {
+    const { user } = req.headers;
+    const transaction = req.body;
+    const date = dayjs().format("DD/MM/YYYY");
+    const time = dayjs().format("HH:mm:ss");
     try {
-        const newUser = {
-            user: user,
-            email: email,
-            cpf: cpf,
-            password: password
-        }
-        await db.collection("users").insertOne(newUser);
-        res.sendStatus(201);
-    } catch (error) {
-        res.sendStatus(500);
-    }
-};
-
-async function postLogin(req, res, db) {
-    const email = req.body.email;
-    const password = req.body.password;
-    try {
-        const confirmationEmail = await db.collection("users").findOne({ email: email });
-        const confirmationpassword = await db.collection("users").findOne({ password: password });
-        if (confirmationEmail && confirmationpassword) {
-            //devolver token para o front
-            res.sendStatus(201);
-            return;
-        } else {
-            res.sendStatus(409).send("Usuário não cadastrado!");
+        const { _id } = await db.collection("users").findOne({ email: user });
+        if (_id) {
+            const data = ({ ...transaction, userId: _id, date, time });
+            const response = await db.collection("wallets").insertOne(data);
+            response && res.status(201).send("Registrado com sucesso:", response)
+        }else {
+            res.status(422).send("Erro na postWallet");
         }
     } catch (error) {
-        res.sendStatus(500);
+        console.log(error);
+        res.status(500).send("postWallet: \n" + error);
     }
-};
+}
 
-async function postTransaction(req, res, db) {
-    
+async function getWallet(req, res) {
+    const { user } = req.headers;
     try {
-     
+        const { _id } = await db.collection("users").findOne({ email: user });
+        const transactions = await db.collection("wallets").find({ userId: new ObjectId(_id) }).toArray();
+        transactions && res.status(200).send(transactions);
     } catch (error) {
-        res.sendStatus(500);
+        console.log(error);
+        res.status(500).send("getWallet: \n" + error);
     }
-};
+}
 
-
-
-
-export { postSignUp, postLogin, postTransaction };
+export { postWallet, getWallet };
