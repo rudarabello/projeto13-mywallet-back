@@ -15,3 +15,5 @@ export default async function checkAuth(req, res, next) {
         console.log(err);
     }
 }
+
+export {checkAuth};
