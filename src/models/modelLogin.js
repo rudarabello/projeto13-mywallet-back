@@ -1,7 +1,7 @@
 
 import Joi from "joi";
 
-export const model = Joi.object({
+export const modelLogin = Joi.object({
     name: Joi.string()
         .required(),
 

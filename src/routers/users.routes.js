@@ -1,7 +1,7 @@
 import { Router } from "express";
-import {login, singup, logout} from "..controllers/auth.controller.js"
-import{ postWallet, getWallet} from "..controlllers/wallet.controller.js"
-import checkAuth from "..middlewares/checkAuth.middlewares.js"
+import {login, singup, logout} from "../controllers/auth-controllers"
+import{ postWallet, getWallet} from "../controllers/wallet-controller"
+import checkAuth from "../middlewares/"
 
 const router = Router();
 
