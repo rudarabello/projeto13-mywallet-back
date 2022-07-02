@@ -1,14 +1,19 @@
-import { db } from "../databases/mongo";
+import { db } from "../databases/mongo.js";
 
-export default async function checkAuth(req, res, next) {
+async function checkAuth(req, res, next) {
     const { authorization } = req.headers;
-    const token = authorization?.replace("Bearer ", "");
-    if (!token) return res.status(401).send("Acesso negado!");
+    if (!authorization) {
+        return res.status(401).send("Acesso negado!");
+    }
     try {
-        const session = await db.collection("sessions").findOne({ token });
+        const token = authorization?.replace("Bearer ", "");
+        const session = await db
+        .collection("sessions")
+        .findOne({token});
         if (!session) {
-            res.status(401).send("Faça login para ter acesso!");
+            res.status(404).send("Faça login para ter acesso!");
         } else {
+            res.locals.session = session;
             next();
         }
     } catch (err) {
@@ -16,4 +21,5 @@ export default async function checkAuth(req, res, next) {
     }
 }
 
-export {checkAuth};
+export default checkAuth ;
+

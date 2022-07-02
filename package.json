@@ -5,7 +5,9 @@
     "dayjs": "^1.11.3",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "joi": "^17.6.0",
     "mongodb": "^4.7.0",
+    "nodemon": "^2.0.18",
     "uuid": "^8.3.2"
   },
   "name": "projeto13-mywallet-back",
@@ -13,7 +15,8 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./src/app.js"
   },
   "keywords": [],
   "author": "",
