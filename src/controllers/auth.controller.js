@@ -2,9 +2,10 @@ import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
 import { db } from "../databases/mongo.js";
 import { modelLogin } from "../models/modelLogin.js"
+import dayjs from "dayjs";
 
-export async function singup(req, res) {
-    const { name, email, password } = req.body;
+export async function signup(req, res) {
+    const { name, email, password, Cpassword } = req.body;
     console.log(req.body)
     console.log("cheguei na singup")
     const passwordHash = bcrypt.hashSync(password, 10);
@@ -30,15 +31,15 @@ export async function singup(req, res) {
 
 export async function login(req, res) {
     const { email, password } = req.body;
+    const date = dayjs().format("DD/MM/YYYY");
+    const time = dayjs().format("HH:mm:ss");
     try {
         const user = await db.collection("users").findOne({ email: email });
         if (user && bcrypt.compareSync(password, user.password)) {
             const token = uuid();
-            const tokenObj = { userId: user._id, token, timestamp: Date.now() }
-            await db.collection("sessions").insertOne(tokenObj);
-            res.status(200).send({ token });
-        } else {
-            res.status(401).send("Senha ou e-mail incorreto!");
+            const data = { name: user.name, userId: user._id, token, date, time }
+            await db.collection("sessions").insertOne(data);
+            return res.status(200).send({ data });
         }
     } catch (error) {
         res.sendStatus(500).send(error);

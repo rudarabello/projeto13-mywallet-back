@@ -1,4 +1,4 @@
-import { db, objectId } from "../databases/mongo.js";
+import { db } from "../databases/mongo.js";
 import dayjs from "dayjs";
 
 async function getWallet(req, res) {
@@ -12,7 +12,7 @@ async function getWallet(req, res) {
         const user = await db
             .collection("users")
             .findOne({ _id: session.userId });
-            transactions && res.status(200).send(transactions);
+        transactions && res.status(200).send(transactions);
     } catch (err) {
         console.log(err);
         res.status(500).send("getWallet: \n" + err);
