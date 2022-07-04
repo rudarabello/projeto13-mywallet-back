@@ -48,7 +48,7 @@ export async function logout(req, res) {
     const { session } = res.locals;
     try {
         await db.collection("sessions").deleteOne({ token: session });
-        res.status(200);
+        res.status(200).send("Logout feito com Sucesso!");
     } catch (err) {
         console.log(err);
         res.status(500).send(err);
