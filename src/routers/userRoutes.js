@@ -7,8 +7,8 @@ const router = Router();
 
 router.post("/", login);
 router.post("/sign-up", signup);
-router.post("/logout", logout);
 
+router.post("/logout", checkAuth, logout);
 router.get("/wallet", checkAuth, getWallet);
 router.post("/wallet", checkAuth, postWallet);
 

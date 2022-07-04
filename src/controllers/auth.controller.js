@@ -6,8 +6,6 @@ import dayjs from "dayjs";
 
 export async function signup(req, res) {
     const { name, email, password, Cpassword } = req.body;
-    console.log(req.body)
-    console.log("cheguei na singup")
     const passwordHash = bcrypt.hashSync(password, 10);
     const newUser = { name, email, password: passwordHash }
     const { value, error } = modelLogin.validate(newUser);
@@ -47,12 +45,12 @@ export async function login(req, res) {
 };
 
 export async function logout(req, res) {
-    const { authorization } = req.headers;
-    const token = authorization?.replace("Bearer ", "");
+    const { session } = res.locals;
     try {
-        const response = await db.collection("sessions").deleteOne({ token });
-        if (response) res.status(200).send("Log-out realizado");
-    } catch (error) {
-        res.sendStatus(500).send(error);
+        await db.collection("sessions").deleteOne({ token: session });
+        res.status(200);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
     }
-}
+};

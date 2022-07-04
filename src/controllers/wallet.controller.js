@@ -17,7 +17,7 @@ async function getWallet(req, res) {
         console.log(err);
         res.status(500).send("getWallet: \n" + err);
     }
-}
+};
 
 
 async function postWallet(req, res) {
@@ -42,6 +42,6 @@ async function postWallet(req, res) {
         console.log(error);
         res.status(500).send("postWallet: \n" + error);
     }
-}
+};
 
 export { postWallet, getWallet };
