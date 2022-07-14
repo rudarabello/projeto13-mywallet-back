@@ -33,6 +33,8 @@ async function postWallet(req, res) {
                 type: transaction.type,
                 value: transaction.value,
                 description: transaction.description,
+                category: transaction.category,
+                subCategory: transaction.subCategory,
                 date,
                 time
             });
