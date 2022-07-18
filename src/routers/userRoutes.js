@@ -5,7 +5,7 @@ import checkAuth from "../middlewares/checkAuthMiddleware.js";
 
 const router = Router();
 
-router.post("/", login);
+router.post("/login", login);
 router.post("/sign-up", signup);
 
 router.delete("/logout", checkAuth, logout);
