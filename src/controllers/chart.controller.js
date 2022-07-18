@@ -76,20 +76,21 @@ async function getChartOut(req, res) {
 
 async function postChartOutSub(req, res) {
     const { session } = res.locals;
-    const category = req.body;
+    const categoryAndSub = req.body;
     const date = dayjs().format("DD/MM");
     const time = dayjs().format("HH:mm:ss");
     try {
         const operation = await db
-            .collection("categorys-out")
+            .collection("categorys-out-sub")
             .insertOne({
                 userId: session.userId,
-                descriptionCategory: category.description,
+                categoryOut: categoryAndSub.categoryOut,
+                subCategoryOut: categoryAndSub.subCategoryOut,
                 date,
                 time
             });
         console.log(operation)
-        res.status(201).send("Registrado com sucesso1")
+        res.status(201).send("Registrado com sucesso!")
     } catch (error) {
         console.log(error);
         res.status(500).send("postChart \n" + error);
@@ -99,11 +100,11 @@ async function getChartOutSub(req, res) {
     const { session } = res.locals;
     const { userId } = session
     try {
-        const categorys = await db
+        const categorysAndSubCat = await db
             .collection("categorys-out-sub")
             .find({ userId: userId })
             .toArray();
-        categorys && res.status(200).send(categorys);
+        categorysAndSubCat && res.status(200).send(categorysAndSubCat);
     } catch (error) {
         console.log(error);
         res.status(500).send("getChart: \n" + error);
