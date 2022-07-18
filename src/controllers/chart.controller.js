@@ -100,7 +100,7 @@ async function getChartOutSub(req, res) {
     const { userId } = session
     try {
         const categorys = await db
-            .collection("categorys-out")
+            .collection("categorys-out-sub")
             .find({ userId: userId })
             .toArray();
         categorys && res.status(200).send(categorys);
