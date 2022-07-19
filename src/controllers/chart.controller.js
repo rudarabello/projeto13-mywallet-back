@@ -1,5 +1,6 @@
 import { db } from "../databases/mongo.js";
 import dayjs from "dayjs";
+import { ObjectId } from "mongodb";
 
 async function postChartIn(req, res) {
     const { session } = res.locals;
@@ -53,7 +54,7 @@ async function postChartOut(req, res) {
                 time
             });
         console.log(operation)
-        res.status(201).send("Registrado com sucesso1")
+        res.status(201).send("Registrado com sucesso!")
     } catch (error) {
         console.log(error);
         res.status(500).send("postChart \n" + error);
@@ -61,7 +62,7 @@ async function postChartOut(req, res) {
 };
 async function getChartOut(req, res) {
     const { session } = res.locals;
-    const { userId } = session
+    const { userId } = session;
     try {
         const categorys = await db
             .collection("categorys-out")
@@ -75,24 +76,33 @@ async function getChartOut(req, res) {
 };
 
 async function postChartOutSub(req, res) {
-    const { session } = res.locals;
-    const categoryAndSub = req.body;
+    const { userId } = res.locals.session;
+    const { subCategoryOut, categoryOut } = req.body;
     const date = dayjs().format("DD/MM");
     const time = dayjs().format("HH:mm:ss");
     try {
-        const operation = await db
-            .collection("categorys-out-sub")
-            .insertOne({
-                userId: session.userId,
-                categoryOut: categoryAndSub.categoryOut,
-                subCategoryOut: categoryAndSub.subCategoryOut,
-                date,
-                time
-            });
-        console.log(operation)
-        res.status(201).send("Registrado com sucesso!")
+        const categorys = await db
+            .collection("categorys-out")
+            .find({ userId: userId })
+            .toArray();
+        for (let index = 0; index < categorys.length; index++) {
+            const categoryFromDB = categorys[index]
+            const { descriptionCategory, _id } = categoryFromDB;
+            if (categoryOut === descriptionCategory) {
+                await db.collection("categorys-out-sub")
+                    .insertOne({
+                        userId: userId,
+                        categoryId: _id,
+                        categoryOut: categoryOut,
+                        subCategoryOut: subCategoryOut,
+                        date,
+                        time
+                    });
+                return res.status(201).send("Registrado com sucesso!")
+            }
+        }
+        return res.status(404).send("Houve um problema no registro!")
     } catch (error) {
-        console.log(error);
         res.status(500).send("postChart \n" + error);
     }
 };
