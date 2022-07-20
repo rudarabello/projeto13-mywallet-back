@@ -108,16 +108,31 @@ async function postChartOutSub(req, res) {
 };
 async function getChartOutSub(req, res) {
     const { session } = res.locals;
-    const { userId } = session
+    const { userId } = session;
+    const dataToFront = []
     try {
-        const categorysAndSubCat = await db
-            .collection("categorys-out-sub")
+        const categorysThisUser = await db
+            .collection("categorys-out")
             .find({ userId: userId })
             .toArray();
-        categorysAndSubCat && res.status(200).send(categorysAndSubCat);
+        for (let index = 0; index < categorysThisUser.length; index++) {
+            const categoryFromDB = categorysThisUser[index]
+            const { _id, descriptionCategory } = categoryFromDB;
+            const subCategorysThisUser = await db
+                .collection("categorys-out-sub")
+                .find({ categoryId: _id })
+                .toArray();
+            let data = [{descriptionCategory}]
+            for (let index = 0; index < subCategorysThisUser.length; index++) {
+                const { subCategoryOut } = subCategorysThisUser[index];
+                data.push({subCategoryOut})
+            }
+            dataToFront.push(data)
+        }
+        res.status(200).send(dataToFront)
     } catch (error) {
         console.log(error);
-        res.status(500).send("getChart: \n" + error);
+        res.status(500).send("getChartOutSub: \n" + error);
     }
 };
 
