@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { postChartIn, getChartIn, getChartOut, postChartOut, postChartOutSub, getChartOutSub } from "../controllers/chart.controller.js";
+import { postChartIn, getChartIn, getChartOut, postChartOut, postChartOutSub, getChartOutSub, getChart } from "../controllers/chart.controller.js";
 import checkAuth from "../middlewares/checkAuthMiddleware.js";
 
 const router = Router();
 
+router.get("/chart", checkAuth, getChart);
 
 router.get("/chart-in", checkAuth, getChartIn);
 router.post("/chart-in", checkAuth, postChartIn);

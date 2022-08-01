@@ -1,6 +1,5 @@
 import { db } from "../databases/mongo.js";
 import dayjs from "dayjs";
-import { ObjectId } from "mongodb";
 
 async function postChartIn(req, res) {
     const { session } = res.locals;
@@ -122,10 +121,10 @@ async function getChartOutSub(req, res) {
                 .collection("categorys-out-sub")
                 .find({ categoryId: _id })
                 .toArray();
-            let data = [{descriptionCategory}]
+            let data = [{ descriptionCategory }]
             for (let index = 0; index < subCategorysThisUser.length; index++) {
                 const { subCategoryOut } = subCategorysThisUser[index];
-                data.push({subCategoryOut})
+                data.push({ subCategoryOut })
             }
             dataToFront.push(data)
         }
@@ -136,5 +135,35 @@ async function getChartOutSub(req, res) {
     }
 };
 
+async function getChart(req, res) {
+    const { session } = res.locals;
+    const { userId } = session
+    let result =[]
+    try {
+        const transactions = await db
+            .collection("transactions")
+            .find({ userId: userId })
+            .toArray();
+        const categorys = await db
+            .collection("categorys-out")
+            .find({ userId: userId })
+            .toArray();
+        categorys.map((e) => {
+            let c = e.category;
+            transactions.map((e) =>{
+                let t = e.descriptionCategory
+                if(e=t){
+                    
+                }
+            }
+            )
+        })
+        res.status(200).send();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("getWallet: \n" + err);
+    }
+};
 
-export { getChartIn, postChartIn, getChartOut, postChartOut, getChartOutSub, postChartOutSub };
+
+export { getChartIn, postChartIn, getChartOut, postChartOut, getChartOutSub, postChartOutSub, getChart };

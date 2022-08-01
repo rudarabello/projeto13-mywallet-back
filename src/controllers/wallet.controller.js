@@ -23,7 +23,7 @@ async function getWallet(req, res) {
 async function postWallet(req, res) {
     const { session } = res.locals;
     const transaction = req.body;
-    const date = dayjs().format("DD/MM");
+    const date = dayjs().format("DD/MM/YYYY");
     const time = dayjs().format("HH:mm:ss");
     try {
         const op = await db
