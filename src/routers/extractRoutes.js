@@ -4,6 +4,6 @@ import checkAuth from "../middlewares/checkAuthMiddleware.js";
 
 const router = Router();
 
-router.get("/chart", checkAuth, getExtract);
+router.get("/extract", checkAuth, getExtract);
 
 export default router;
