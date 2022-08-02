@@ -16,7 +16,7 @@ async function getExtract(req, res) {
         const result = transactions.filter(
             (transaction) => {                
                 const transactionDate = dayjs(transaction.date, "DD/MM/YYYY");
-                return initialDate < transactionDate && transactionDate < finalDate;
+                return initialDate <= transactionDate && transactionDate <= finalDate;
             })
         res.status(200).send(result);
     } catch (err) {
